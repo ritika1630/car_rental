@@ -12,7 +12,7 @@ const Profile = () => {
     const token = sessionStorage.getItem("token");
     if (!token) {
       console.warn("No token found, redirecting to login.");
-      navigate("/login"); // Redirect to login if not authenticated
+      navigate("/login", { state: { message: "Please log in to view your profile." } });
       return;
     }
 
@@ -39,7 +39,8 @@ const Profile = () => {
           const errorData = await response.json();
           console.error("Failed to fetch profile data:", errorData);
           setError(errorData.message || "Failed to fetch profile data.");
-          navigate("/login"); // Redirect to login if unauthorized
+          // Redirect to login if unauthorized or an error occurs
+          navigate("/login");
         }
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -53,26 +54,48 @@ const Profile = () => {
   }, [navigate]);
 
   if (loading) {
-    return <div>Loading...</div>; // Display loading message while data is being fetched
+    return (
+      <div className="bg-white text-[#181511] min-h-screen font-serif flex items-center justify-center">
+        <p className="text-xl">Loading profile...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-red-500">Error: {error}</div>; // Display error message
+    return (
+      <div className="bg-white text-[#181511] min-h-screen font-serif flex items-center justify-center">
+        <p className="text-xl text-red-600">Error: {error}</p>
+      </div>
+    );
   }
 
   if (!userData) {
-    return <div>No user data found.</div>; // In case there is an issue or no data is returned
+    return (
+      <div className="bg-white text-[#181511] min-h-screen font-serif flex items-center justify-center">
+        <p className="text-xl">No user data found.</p>
+      </div>
+    );
   }
 
   return (
-    <div className="container py-8">
-      <h1 className="text-3xl font-bold">Profile</h1>
-      <div className="mt-6">
-        <h2 className="text-2xl font-medium">User Information</h2>
-        <div className="mt-4">
-          <p><strong>Name:</strong> {userData.name}</p>
-          <p><strong>Email:</strong> {userData.email}</p>
+    <div className="bg-white text-[#181511] min-h-screen font-serif flex items-center justify-center">
+      <div className="flex flex-col items-center p-8 rounded-2xl shadow-xl max-w-md w-full bg-[#f4f2f0] border border-[#e6e1db]">
+        <h2 className="text-[22px] font-bold tracking-[-0.015em] pt-5 pb-3">
+          User Profile
+        </h2>
+        <div className="space-y-4 text-[#181511] text-base leading-normal w-full mt-4">
+          <p className="font-semibold"><strong>Name:</strong> {userData.name}</p>
+          <p className="font-semibold"><strong>Email:</strong> {userData.email}</p>
           {/* You can add more fields as necessary */}
+        </div>
+
+        <div className="flex justify-center mt-6 w-full">
+          <button
+            onClick={() => navigate("/")}
+            className="w-full bg-[#d47611] text-white h-12 rounded-lg font-bold text-base transition-colors hover:bg-[#c36c10]"
+          >
+            <span className="truncate">Go to Home</span>
+          </button>
         </div>
       </div>
     </div>

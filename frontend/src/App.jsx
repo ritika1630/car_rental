@@ -21,6 +21,7 @@ import ScrollToTop from "./components/Scroll/ScrollToTop";
 // import AuthComp from "./components/AuthComp";
 import BookingHistory from './components/BookingHistory/BookingHistory';
 import Profile from "./components/Profile/Profile";
+import ProductDetails from "./components/Details/ProductDetails";
 
 const App = () => {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -62,6 +63,7 @@ const App = () => {
               <Route path="/booking-summary" element={<BookingSummary />} />
               <Route path="/booking-history" element={<BookingHistory />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/details/:id" element={<ProductDetails/>}/>
             </Routes>
             <Footer />
           </div>

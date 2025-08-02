@@ -23,61 +23,69 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white py-12">
-      <div className="container mx-auto px-4 text-center">
-        <h2 className="text-3xl sm:text-4xl font-semibold font-serif mb-6">
-          Contact Us
-        </h2>
-        <p className="text-lg mb-12">
-          Have questions? We're here to help. Reach out to us using the form below or through our social media channels.
-        </p>
+    <div className="bg-white text-[#181511] min-h-screen font-serif">
+      {/* Content Container */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="flex flex-col text-center items-center justify-center py-12">
+          {/* Updated heading style to match About page */}
+          <h1 className="text-[22px] font-bold tracking-[-0.015em] pt-5 pb-3">Contact Us</h1>
+          {/* Updated paragraph style to match About page */}
+          <p className="text-base pb-3 max-w-2xl">
+            We'd love to hear from you! Please fill out the form below and we'll get in touch with you as soon as possible.
+          </p>
+        </div>
+
         <div className="flex justify-center">
-          <div className="w-full max-w-lg bg-gray-900 border border-gray-700 rounded-lg p-6">
+          <div className="w-full max-w-lg p-8 rounded-2xl shadow-xl bg-[#f4f2f0] border border-[#e6e1db]">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
+                <label htmlFor="name" className="text-sm font-medium text-[#181511] block mb-2">Your Name</label>
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  className="w-full px-4 py-2 border border-gray-700 rounded-md bg-gray-800 text-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-primary focus:outline-none"
-                  placeholder="Your Name"
+                  className="w-full px-5 py-3 border border-[#e6e1db] rounded-xl bg-white text-[#181511] placeholder-[#897761] focus:ring-2 focus:ring-[#d47911] focus:outline-none transition-colors"
+                  placeholder="Enter your name"
                   required
                 />
               </div>
               <div>
+                <label htmlFor="email" className="text-sm font-medium text-[#181511] block mb-2">Your Email</label>
                 <input
                   type="email"
                   id="email"
                   name="email"
-                  className="w-full px-4 py-2 border border-gray-700 rounded-md bg-gray-800 text-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-primary focus:outline-none"
-                  placeholder="Your Email"
+                  className="w-full px-5 py-3 border border-[#e6e1db] rounded-xl bg-white text-[#181511] placeholder-[#897761] focus:ring-2 focus:ring-[#d47911] focus:outline-none transition-colors"
+                  placeholder="Enter your email"
                   required
                 />
               </div>
               <div>
+                <label htmlFor="message" className="text-sm font-medium text-[#181511] block mb-2">Your Message</label>
                 <textarea
                   id="message"
                   name="message"
-                  className="w-full px-4 py-2 border border-gray-700 rounded-md bg-gray-800 text-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-primary focus:outline-none"
+                  className="w-full px-5 py-3 border border-[#e6e1db] rounded-xl bg-white text-[#181511] placeholder-[#897761] focus:ring-2 focus:ring-[#d47911] focus:outline-none transition-colors"
                   rows="5"
-                  placeholder="Your Message"
+                  placeholder="Type your message here..."
                   required
                 ></textarea>
               </div>
               <button
                 type="submit"
-                className="w-full bg-primary hover:bg-primary/80 text-white py-2 px-4 rounded-md transition duration-300"
+                // Updated button style to match About page
+                className="w-full bg-[#d47611] text-white px-5 h-12 rounded-lg font-bold text-base"
               >
                 Send Message
               </button>
             </form>
             {isSubmitted && (
-              <p className="mt-4 text-green-400">
+              <p className="mt-6 text-green-600 text-center">
                 Your message has been submitted successfully!
               </p>
             )}
             {error && (
-              <p className="mt-4 text-red-400">
+              <p className="mt-6 text-red-600 text-center">
                 {error}
               </p>
             )}

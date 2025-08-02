@@ -66,14 +66,8 @@ const Navbar = () => {
           {/* Navigation Links */}
           <nav className="hidden md:block">
             <ul className="flex items-center gap-8">
-              <li className="py-4">
-                <Link
-                  to="/"
-                  className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500"
-                >
-                  Home
-                </Link>
-              </li>
+              
+              {/* Kept existing links */}
               <li className="py-4">
                 <Link
                   to="/about"
@@ -96,6 +90,15 @@ const Navbar = () => {
                   className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500"
                 >
                   Booking
+                </Link>
+              </li>
+              {/* New Contact Us link added at the end */}
+              <li className="py-4">
+                <Link
+                  to="/contact"
+                  className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500"
+                >
+                  Contact Us
                 </Link>
               </li>
             </ul>

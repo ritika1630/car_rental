@@ -67,6 +67,21 @@ app.get('/api/cars', async (req, res) => {
   }
 });
 
+
+app.get("/api/cars/:id", async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id); // Use the Car model
+    if (!car) {
+      return res.status(404).json({ error: "Car not found" }); // Adjust the error message
+    }
+    res.json(car);
+  } catch (err) {
+    console.error("Error fetching car:", err.message);
+    res.status(500).json({ error: "Failed to fetch car details" });
+  }
+});
+
+
 // Register User Route
 app.post('/api/register', async (req, res) => {
   const { name, email, password } = req.body;

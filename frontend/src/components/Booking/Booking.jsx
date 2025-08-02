@@ -3,34 +3,31 @@ import { useNavigate } from "react-router-dom";
 import { useCarContext } from "../context/carContext";
 
 const Booking = () => {
-  const { selectedCar, setBookedCar } = useCarContext(); // Access booking context
+  const { setBookedCar } = useCarContext();
   const [pickupDate, setPickupDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState(""); // Confirmation or error message
-  const [loading, setLoading] = useState(false); // Loading state
-  const [carList, setCarList] = useState([]); // State to store available cars
-  const [selectedCarModel, setSelectedCarModel] = useState(""); // Selected car model
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [carList, setCarList] = useState([]);
+  const [selectedCar, setSelectedCar] = useState({ id: "", model: "" });
+  const [step, setStep] = useState(1);
   const navigate = useNavigate();
 
-  // Fetch car list from your API or JSON file
+  const today = new Date().toISOString().split("T")[0];
+
   useEffect(() => {
     const fetchCarList = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/cars"); // Update this URL if needed
+        const response = await fetch("http://localhost:5000/api/cars");
         if (!response.ok) {
           throw new Error("Failed to fetch car list.");
         }
         const data = await response.json();
 
-        console.log("API Response:", data); // Log the entire response to check its structure
-
-        // Check if the response contains the correct car list format
         if (data.cars && Array.isArray(data.cars)) {
-          setCarList(data.cars); // Assuming the response contains a 'cars' array
+          setCarList(data.cars);
         } else if (Array.isArray(data)) {
-          setCarList(data); // Direct array response
+          setCarList(data);
         } else {
           setMessage("No cars available.");
         }
@@ -43,16 +40,19 @@ const Booking = () => {
     fetchCarList();
   }, []);
 
-  // Email validation regex
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  const handleNextStep = (e) => {
+    e.preventDefault();
+    if (!selectedCar.id) {
+      setMessage("Please select a car model before continuing.");
+      return;
+    }
+    setMessage("");
+    setStep(2);
   };
 
   const handleBooking = async (e) => {
     e.preventDefault();
 
-    // Check if user is logged in
     const token = sessionStorage.getItem("token");
     if (!token) {
       navigate("/login", {
@@ -64,33 +64,23 @@ const Booking = () => {
       return;
     }
 
-    // Validate email format
-    if (!validateEmail(email)) {
-      setMessage("Please enter a valid email.");
+    if (!pickupDate || !returnDate) {
+      setMessage("Please fill in the pickup and return dates.");
       return;
     }
 
-    // Validate date inputs
     if (new Date(pickupDate) >= new Date(returnDate)) {
       setMessage("Return date must be later than pickup date.");
       return;
     }
 
-    // Check if all fields are filled
-    if (!name || !email || !pickupDate || !returnDate || !selectedCarModel) {
-      setMessage("Please fill all the fields.");
-      return;
-    }
-
-    setLoading(true); // Start loading state
-    setMessage(""); // Clear previous messages
+    setLoading(true);
+    setMessage("");
 
     const bookingDetails = {
-      car: selectedCarModel,
+      car: selectedCar.id, // Corrected key name from 'carId' to 'car'
       pickupDate,
       returnDate,
-      name,
-      email,
     };
 
     try {
@@ -98,7 +88,7 @@ const Booking = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Send token for authentication
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(bookingDetails),
       });
@@ -115,107 +105,170 @@ const Booking = () => {
         setMessage("Booking successful! Redirecting to summary...");
       }
 
-      setBookedCar(bookingDetails);
+      setBookedCar({ ...bookingDetails, carModel: selectedCar.model });
       setTimeout(() => {
         setLoading(false);
         navigate("/booking-summary");
       }, 2000);
     } catch (error) {
       console.error("Error during booking:", error);
+      // More specific error message
       setMessage(`Error: ${error.message || "An error occurred. Please try again."}`);
       setLoading(false);
     }
   };
 
+  const handlePickupDateChange = (e) => {
+    const newPickupDate = e.target.value;
+    setPickupDate(newPickupDate);
+    setReturnDate(newPickupDate);
+  };
+
+  const handleReturnDateChange = (e) => {
+    const selectedReturnDate = e.target.value;
+
+    if (!pickupDate) {
+      setMessage("Please select a pickup date first.");
+      setReturnDate("");
+      return;
+    }
+
+    const pickupDateObj = new Date(pickupDate);
+    pickupDateObj.setDate(pickupDateObj.getDate() + 1);
+    const nextDay = pickupDateObj.toISOString().split("T")[0];
+
+    if (selectedReturnDate === pickupDate || selectedReturnDate === nextDay) {
+      setReturnDate(selectedReturnDate);
+    } else {
+      setMessage("Return date must be either the pickup date or the next day.");
+      setReturnDate("");
+    }
+  };
+
   return (
-    <div className="bg-black text-white min-h-screen flex items-center justify-center">
-      <div className="bg-gray-800 p-8 rounded-lg shadow-md max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-6 text-center">Book a Car</h2>
-        <form onSubmit={handleBooking}>
-          <div className="mb-4">
-            <label className="block text-gray-300 text-sm font-medium mb-2">Car Model</label>
-            {/* Car Model Dropdown */}
-            <select
-              value={selectedCarModel}
-              onChange={(e) => setSelectedCarModel(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md border-gray-600 bg-gray-900 text-gray-300"
-              required
-            >
-              <option value="">Select a car model</option>
-              {carList.length === 0 ? (
-                <option value="">Loading cars...</option>
-              ) : (
-                carList.map((car) => (
-                  <option key={car._id} value={car.model}>
-                    {car.model}
-                  </option>
-                ))
-              )}
-            </select>
-          </div>
+    <div className="bg-white text-[#181511] min-h-screen font-serif">
+      {/* Content Container */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="flex flex-col text-center items-center justify-center py-12">
+          {/* Updated heading style to match About page */}
+          <h1 className="text-[22px] font-bold tracking-[-0.015em] pt-5 pb-3">Book Your Classic Ride</h1>
+          {/* Updated paragraph style to match About page */}
+          <p className="text-base pb-3 max-w-2xl">
+            Select a vehicle and your rental dates to get started.
+          </p>
+        </div>
 
-          {/* Other fields like Pickup Date, Return Date, Name, and Email */}
-          <div className="mb-4">
-            <label className="block text-gray-300 text-sm font-medium mb-2">Pickup Date</label>
-            <input
-              type="date"
-              value={pickupDate}
-              onChange={(e) => setPickupDate(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md border-gray-600 bg-gray-900 text-gray-300"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-300 text-sm font-medium mb-2">Return Date</label>
-            <input
-              type="date"
-              value={returnDate}
-              onChange={(e) => setReturnDate(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md border-gray-600 bg-gray-900 text-gray-300"
-              required
-            />
-          </div>
-
-          {/* <div className="mb-6">
-            <label className="block text-gray-300 text-sm font-medium mb-2">Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md border-gray-600 bg-gray-900 text-gray-300"
-              placeholder="Enter your name"
-              required
-            />
-          </div> */}
-
-          {/* <div className="mb-6">
-            <label className="block text-gray-300 text-sm font-medium mb-2">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md border-gray-600 bg-gray-900 text-gray-300"
-              placeholder="Enter your email"
-              required
-            />
-          </div> */}
-
-          <button
-            type="submit"
-            className="w-full bg-primary hover:bg-primary/80 text-white py-2 px-4 rounded-md transition duration-300"
-            disabled={loading}
-          >
-            {loading ? "Processing..." : "Book Now"}
-          </button>
-
+        <form onSubmit={step === 2 ? handleBooking : handleNextStep}>
           {message && (
             <div
-              className={`mt-4 text-center ${message.includes("success") ? "text-green-500" : "text-red-500"}`}
+              className={`mt-4 text-center px-4 ${
+                message.includes("success") ? "text-green-600" : "text-red-600"
+              }`}
             >
               {message}
             </div>
           )}
+
+          <div className="w-full max-w-lg mx-auto p-8 rounded-2xl shadow-xl bg-[#f4f2f0] border border-[#e6e1db]">
+            <div className="flex flex-col gap-3 pb-6">
+              <div className="flex gap-6 justify-between">
+                {step === 1 ? (
+                  <p className="text-sm font-medium text-[#181511]">Step 1 of 2: Select Your Car</p>
+                ) : (
+                  <p className="text-sm font-medium text-[#181511]">Step 2 of 2: Select Dates</p>
+                )}
+              </div>
+              <div className="rounded bg-[#e6e1db]">
+                <div className="h-2 rounded bg-[#d47611]" style={{ width: `${step === 1 ? '50%' : '100%'}` }}></div>
+              </div>
+            </div>
+
+            {step === 1 && (
+              <>
+                <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] pb-2 pt-4">Car Selection</h3>
+                <div className="flex flex-wrap items-end gap-4 py-3">
+                  <label className="flex flex-col flex-1">
+                    <p className="text-base font-medium leading-normal pb-2">Car Model</p>
+                    <select
+                      value={selectedCar.id}
+                      onChange={(e) => {
+                        const carId = e.target.value;
+                        const car = carList.find(c => c._id === carId);
+                        setSelectedCar(car ? { id: car._id, model: car.model } : { id: "", model: "" });
+                      }}
+                      className="w-full px-5 py-3 border border-[#e6e1db] rounded-lg bg-white text-[#181511] placeholder-[#897761] focus:ring-2 focus:ring-[#d47911] focus:outline-none transition-colors"
+                      required
+                    >
+                      <option value="">Select a car model</option>
+                      {carList.length === 0 ? (
+                        <option value="" disabled>Loading cars...</option>
+                      ) : (
+                        carList.map((car) => (
+                          <option key={car._id} value={car._id}>
+                            {car.model}
+                          </option>
+                        ))
+                      )}
+                    </select>
+                  </label>
+                </div>
+                <div className="flex py-3 justify-end">
+                  <button
+                    type="submit"
+                    className="bg-[#d47611] text-white px-5 h-12 rounded-lg font-bold text-base"
+                  >
+                    <span className="truncate">Continue</span>
+                  </button>
+                </div>
+              </>
+            )}
+
+            {step === 2 && (
+              <>
+                <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] pb-2 pt-4">Rental Dates</h3>
+                <div className="flex flex-wrap items-end gap-4 py-3">
+                  <label className="flex flex-col min-w-40 flex-1">
+                    <p className="text-base font-medium leading-normal pb-2">Pickup Date</p>
+                    <input
+                      type="date"
+                      value={pickupDate}
+                      onChange={handlePickupDateChange}
+                      min={today}
+                      className="w-full px-5 py-3 border border-[#e6e1db] rounded-lg bg-white text-[#181511] placeholder-[#897761] focus:ring-2 focus:ring-[#d47911] focus:outline-none transition-colors"
+                      required
+                    />
+                  </label>
+                  <label className="flex flex-col min-w-40 flex-1">
+                    <p className="text-base font-medium leading-normal pb-2">Return Date</p>
+                    <input
+                      type="date"
+                      value={returnDate}
+                      onChange={handleReturnDateChange}
+                      min={pickupDate}
+                      className="w-full px-5 py-3 border border-[#e6e1db] rounded-lg bg-white text-[#181511] placeholder-[#897761] focus:ring-2 focus:ring-[#d47911] focus:outline-none transition-colors"
+                      required
+                    />
+                  </label>
+                </div>
+                <div className="flex py-3 justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="bg-gray-200 text-[#181511] px-5 h-12 rounded-lg font-bold text-base"
+                  >
+                    <span className="truncate">Back</span>
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-[#d47611] text-white px-5 h-12 rounded-lg font-bold text-base"
+                    disabled={loading}
+                  >
+                    <span className="truncate">{loading ? "Processing..." : "Book Now"}</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </form>
       </div>
     </div>

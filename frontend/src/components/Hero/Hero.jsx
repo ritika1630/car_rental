@@ -59,8 +59,8 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <Contact />
+      {/* Contact Section
+      <Contact /> */}
     </div>
   );
 };

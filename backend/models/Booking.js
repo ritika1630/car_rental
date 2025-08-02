@@ -6,8 +6,11 @@ const bookingSchema = new mongoose.Schema({
     ref: 'User', // Reference to the User model
     required: true,
   },
+  // This is the key change to make populate work correctly.
+  // We now define the type as an ObjectId and reference the 'Car' model.
   car: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Car',
     required: true,
   },
   pickupDate: {
@@ -18,8 +21,6 @@ const bookingSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  
-  
 });
 
 const Booking = mongoose.model('Booking', bookingSchema);

@@ -3,40 +3,52 @@ import { useCarContext } from "../context/carContext";
 import { useNavigate } from "react-router-dom";
 
 const BookingSummary = () => {
-  const { bookedCar } = useCarContext(); // Get the booked car from context
+  const { bookedCar } = useCarContext();
   const navigate = useNavigate();
 
+  // Updated fallback view to match the site theme
   if (!bookedCar) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center">
-        <p>No car has been booked yet.</p>
+      <div className="bg-white text-[#181511] min-h-screen font-serif flex flex-col items-center justify-center">
+        <p className="text-xl mb-6">No car has been booked yet.</p>
         <button
-          className="mt-4 bg-primary hover:bg-primary/80 text-white py-2 px-4 rounded-md transition duration-300"
+          className="bg-[#d47611] text-white px-5 h-12 rounded-lg font-bold text-base"
           onClick={() => navigate("/")}
         >
-          Go back to Home
+          <span className="truncate">Go back to Home</span>
         </button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center py-12">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl sm:text-4xl font-semibold font-serif mb-6 text-center">Booking Summary</h1>
-        <div className="max-w-md mx-auto bg-gray-800 p-6 rounded-md shadow-md">
-          <h2 className="text-2xl font-bold mb-4">Car Model: {bookedCar.car.model}</h2>
-          <p className="mb-2">Pickup Date: {bookedCar.pickupDate}</p>
-          <p className="mb-2">Return Date: {bookedCar.returnDate}</p>
-          <p className="mb-2">Name: {bookedCar.name}</p>
-          <p className="mb-2">Email: {bookedCar.email}</p>
+    <div className="bg-white text-[#181511] min-h-screen font-serif">
+      {/* Content Container */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="flex flex-col text-center items-center justify-center py-12">
+          {/* Updated heading style to match About page */}
+          <h1 className="text-[22px] font-bold tracking-[-0.015em] pt-5 pb-3">Booking Summary</h1>
         </div>
+
+        <div className="max-w-lg mx-auto p-8 rounded-2xl shadow-xl bg-[#f4f2f0] border border-[#e6e1db] mt-6">
+          <h3 className="text-[22px] font-bold tracking-[-0.015em] pb-3">
+            Booking Details
+          </h3>
+          
+          <div className="space-y-4 text-base pb-3">
+            <p><strong>Car Model:</strong> {bookedCar.carModel}</p>
+            <p><strong>Pickup Date:</strong> {bookedCar.pickupDate}</p>
+            <p><strong>Return Date:</strong> {bookedCar.returnDate}</p>
+          </div>
+
+        </div>
+        
         <div className="flex justify-center mt-6">
           <button
-            className="bg-primary hover:bg-primary/80 text-white py-2 px-4 rounded-md transition duration-300"
+            className="bg-[#d47611] text-white px-5 h-12 rounded-lg font-bold text-base"
             onClick={() => navigate("/")}
           >
-            Go back to Home
+            <span className="truncate">Go back to Home</span>
           </button>
         </div>
       </div>
