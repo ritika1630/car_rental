@@ -2,38 +2,40 @@
 A full-stack car rental application built with the MERN stack (MongoDB, Express.js, React, Node.js). This platform allows users to browse available cars, view detailed information, and make bookings. The application includes user authentication for a personalized experience.
 
 ### Features
-- User Authentication: Secure user registration and login.
-- Browse Cars: View a list of available cars with key details like model and price.
-- Car Details: Click on any car to see more information, including a description and specifications.
-- Booking System: A simple booking process for authenticated users.
-- User Profile: A dedicated page for logged-in users to view their profile information.
-- Responsive Design: The application is designed to be fully responsive and accessible on various devices.
+
+- **User Authentication**: Secure user registration and login system using JWT.
+- **Browse Cars**: View a list of available cars with key details like model, image, and price.
+- **Car Details**: Click on a car to view detailed specifications and descriptions.
+- **Booking System**: Authenticated users can book cars with ease.
+- **User Profile**: Logged-in users have access to their profile and booking history.
+- **Responsive Design**: Fully responsive UI compatible with all screen sizes.
+
 
 ### Technologies Used
+
 #### Frontend
-- React: A JavaScript library for building user interfaces.
-- React Router: For handling client-side routing.
-- Tailwind CSS: A utility-first CSS framework for styling.
-- Context API: For global state management (e.g., user authentication, selected car).
-
+- **React**: UI library
+- **React Router**: For routing
+- **Tailwind CSS**: Utility-first CSS framework
+- **Context API**: State management
+  
 #### Backend
-- Node.js: A JavaScript runtime environment for the server.
-- Express.js: A web application framework for Node.js.
-- Nodemon: A tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected.
-- MongoDB: A NoSQL database for storing application data.
-- Mongoose: An ODM (Object Data Modeling) library for MongoDB and Node.js.
-- JWT (JSON Web Tokens): For secure, stateless authentication.
-
+- **Node.js**: JavaScript runtime
+- **Express.js**: Backend framework
+- **MongoDB**: NoSQL database
+- **Mongoose**: MongoDB ODM
+- **JWT**: Authentication
+- **Nodemon**: Development server tool
+  
 ### Prerequisites
-Before you begin, ensure you have the following installed:
 
+Make sure you have the following installed:
 - Node.js (LTS version recommended)
-- npm
-- MongoDB (local installation or a cloud service like MongoDB Atlas)
-
+- npm (comes with Node.js)
+- MongoDB (locally or via MongoDB Atlas)
+  
 ### Installation and Setup
 ##### 1 Clone the repository
-First, clone the repository to your local machine.
 
 ```bash
 git clone https://github.com/ritika1630/car_rental.git
@@ -47,7 +49,7 @@ cd server
 npm install
 ```
 
-- Create a `.env` file in the `backend` directory and add your enviornment variables,
+- Create a `.env` file in the `backend` directory and add your environment variables,
 
 ```bash
 PORT=5000
@@ -55,7 +57,7 @@ MONGODB_URI=<Your MongoDB connection string>
 JWT_SECRET=<A strong, random secret key>
 ```
 
-- Install `nodemon` as a development dependancy
+- Install `nodemon` (for development)
 
 ```bash
 npm install --save-dev nodemon
