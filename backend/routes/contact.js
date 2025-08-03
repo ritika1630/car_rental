@@ -3,7 +3,8 @@ const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
 
-router.post('/contact', async (req, res) => {
+// Change made here: route path is now just "/"
+router.post('/', async (req, res) => {
   try {
     const { name, email, message } = req.body;
     const newMessage = new Message({

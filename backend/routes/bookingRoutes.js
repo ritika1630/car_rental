@@ -1,6 +1,6 @@
 const express = require("express");
 const Booking = require("../models/Booking"); // Assuming you have a Booking model
-const authMiddleware = require("./authRoutes"); // Auth middleware for JWT verification
+const authMiddleware = require("../middleware/authMiddleware"); // Auth middleware for JWT verification
 const { getBookingHistory } = require("../controllers/bookingController");
 const router = express.Router();
 

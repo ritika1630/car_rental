@@ -1,37 +1,54 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+const express = require("express");
+const router = express.Router();
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const authMiddleware = require("../middleware/authMiddleware");
 
-const authMiddleware = async (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
-  if (!token) {
-    return res.status(401).json({ error: 'Authorization token required' });
-  }
+// Register
+router.post("/register", async (req, res) => {
+  const { name, email, password } = req.body;
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const existing = await User.findOne({ email });
+    if (existing)
+      return res.status(400).json({ message: "Email already registered" });
 
-    // Log decoded token to check if it's valid
-    console.log("Decoded Token:", decoded);
+    const hashed = await bcrypt.hash(password, 10);
+    const user = await User.create({ name, email, password: hashed });
 
-    // Look up the user by the ID decoded from the token
-    const user = await User.findById(decoded.id);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    // Attach the user to the request object
-    req.user = user;
-
-    // Log user to confirm it's being added to the request
-    console.log("User attached to request:", req.user);
-
-    next(); // Continue to the next middleware or route handler
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "7d" });
+    res.status(201).json({ token, user: { id: user._id, name, email } });
   } catch (error) {
-    console.error("JWT Error:", error);
-    return res.status(401).json({ error: 'Invalid or expired token' });
+    console.error("Registration error:", error);
+    res.status(500).json({ message: "Registration failed" });
   }
-};
+});
 
-module.exports = authMiddleware;
+// Login
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user || !(await bcrypt.compare(password, user.password)))
+      return res.status(400).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "7d" });
+    res.status(200).json({ token, user: { id: user._id, name: user.name, email } });
+  } catch (error) {
+    console.error("Login error:", error); // This line is new and helpful
+    res.status(500).json({ message: "Login failed" });
+  }
+});
+
+// Profile
+router.get("/profile", authMiddleware, async (req, res) => {
+  const user = await User.findById(req.user._id).select("-password");
+  if (!user) return res.status(404).json({ message: "User not found" });
+  res.json({ user });
+});
+
+module.exports = router;
