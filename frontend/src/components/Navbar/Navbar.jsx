@@ -71,7 +71,7 @@ const Navbar = () => {
               <li className="py-4">
                 <Link
                   to="/about"
-                  className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500"
+                   className="text-lg font-medium py-2 hover:text-[#d47611] hover:border-b-2 hover:border-[#d47611] transition-colors duration-500"
                 >
                   About
                 </Link>
@@ -79,7 +79,7 @@ const Navbar = () => {
               <li className="py-4">
                 <Link
                   to="/cars"
-                  className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500"
+                   className="text-lg font-medium py-2 hover:text-[#d47611] hover:border-b-2 hover:border-[#d47611] transition-colors duration-500"
                 >
                   Cars
                 </Link>
@@ -87,7 +87,7 @@ const Navbar = () => {
               <li className="py-4">
                 <Link
                   to="/booking"
-                  className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500"
+                   className="text-lg font-medium py-2 hover:text-[#d47611] hover:border-b-2 hover:border-[#d47611] transition-colors duration-500"
                 >
                   Booking
                 </Link>
@@ -96,7 +96,7 @@ const Navbar = () => {
               <li className="py-4">
                 <Link
                   to="/contact"
-                  className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500"
+                   className="text-lg font-medium py-2 hover:text-[#d47611] hover:border-b-2 hover:border-[#d47611] transition-colors duration-500"
                 >
                   Contact Us
                 </Link>
@@ -160,13 +160,13 @@ const Navbar = () => {
               <>
                 <Link
                   to="/login"
-                  className="text-lg font-medium hover:text-primary transition-colors duration-300"
+                   className="text-lg font-medium py-2 hover:text-[#d47611] hover:border-b-2 hover:border-[#d47611] transition-colors duration-500"
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-primary text-black px-4 py-2 rounded-md hover:bg-primary-dark transition-all duration-300"
+                  className="bg-[#d47611] text-black px-4 py-2 rounded-md hover:bg-[#d47611]-dark transition-all duration-300"
                 >
                   Register
                 </Link>

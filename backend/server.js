@@ -27,7 +27,9 @@ const carRoutes = require('./routes/car');
 const contactRoutes = require('./routes/contact');
 const bookingRoutes = require('./routes/bookingRoutes');
 const Car = require('./models/Car');
+const profileRoute = require('./routes/profile');
 
+app.use('/api/profile', profileRoute);
 app.use('/api/auth', authRoutes);
 app.use('/api/cars', carRoutes);
 app.use('/api/contact', contactRoutes);

@@ -78,7 +78,7 @@ const CarList = () => {
                   <p>₹{data.price}/- Per Day</p>
                   <button
                     onClick={() => handleDetailsClick(data)}
-                    className="text-indigo-600 hover:underline"
+                    className="text-[#d47611] hover:underline"
                   >
                     Details
                   </button>
