@@ -53,7 +53,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="relative z-10 shadow-md w-full dark:bg-black dark:text-white duration-300">
+    <div className="fixed top-0 left-0 z-50 w-full shadow-md bg-white dark:text-white duration-300">
       <div className="container py-2 md:py-0">
         <div className="flex justify-between items-center">
           {/* Logo */}

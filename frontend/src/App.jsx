@@ -22,7 +22,7 @@ import ScrollToTop from "./components/Scroll/ScrollToTop";
 import BookingHistory from './components/BookingHistory/BookingHistory';
 import Profile from "./components/Profile/Profile";
 import ProductDetails from "./components/Details/ProductDetails";
-
+import VerifyOtp from "./components/Otp/VerifyOtp";
 const App = () => {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const element = document.documentElement;
@@ -50,21 +50,24 @@ const App = () => {
     <AuthProvider>
       <CarProvider>
         <Router>
-          <div className={`bg-white dark:bg-black dark:text-white text-black overflow-x-hidden`}>
+          <div className={"min-h-screen flex flex-col bg-white dark:bg-black dark:text-white text-black overflow-x-hidden"}>
             <Navbar theme={theme} setTheme={setTheme} />
-            <Routes>
-              <Route path="/" element={<Hero theme={theme} />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/cars" element={<CarList />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/booking" element={<Booking />} />
-              <Route path="/booking-summary" element={<BookingSummary />} />
-              <Route path="/booking-history" element={<BookingHistory />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/details/:id" element={<ProductDetails/>}/>
-            </Routes>
+            <div className="flex-grow">
+              <Routes>
+                <Route path="/" element={<Hero theme={theme} />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/cars" element={<CarList />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/booking" element={<Booking />} />
+                <Route path="/booking-summary" element={<BookingSummary />} />
+                <Route path="/booking-history" element={<BookingHistory />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/details/:id" element={<ProductDetails/>}/>
+                <Route path="/verify-otp" element={<VerifyOtp />} />
+              </Routes>
+              </div>
             <Footer />
           </div>
           <ScrollToTop />

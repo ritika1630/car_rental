@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-white text-[#181511] min-h-screen font-serif flex items-center justify-center">
+    <div className="bg-white text-[#181511] min-h-screen font-serif flex items-center justify-center pt-20">
       <div className="flex flex-col items-center p-8 rounded-2xl shadow-xl max-w-md w-full bg-[#f4f2f0] border border-[#e6e1db]">
         <h2 className="text-[22px] font-bold tracking-[-0.015em] pt-5 pb-3">
           Log In

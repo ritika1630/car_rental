@@ -52,7 +52,7 @@ const CarList = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white text-black py-12">
+    <div className="min-h-screen bg-white text-black py-12 pt-20">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl sm:text-4xl font-semibold font-serif mb-6 text-center">Available Cars</h1>
         <p className="text-sm mb-12 text-center text-gray-600">
